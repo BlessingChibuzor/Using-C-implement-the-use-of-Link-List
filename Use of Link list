@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertAtBeginning(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    newNode->next = *head;
+    *head = newNode;
+}
+
+void insertAtEnd(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct Node* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+void deleteNode(struct Node** head, int data) {
+    struct Node* current = *head;
+    struct Node* prev = NULL;
+
+    while (current != NULL && current->data != data) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("%d not found in the list.\n", data);
+        return;
+    }
+
+    if (prev == NULL) {
+        *head = current->next;
+    } else {
+        prev->next = current->next;
+    }
+
+    free(current);
+    printf("%d deleted from the list.\n", data);
+}
+
+void display(struct Node* head) {
+    struct Node* current = head;
+    if (current == NULL) {
+        printf("Linked list is empty.\n");
+    } else {
+        printf("Linked list elements: ");
+        while (current != NULL) {
+            printf("%d ", current->data);
+            current = current->next;
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    struct Node* head = NULL;
+
+    insertAtEnd(&head, 10);
+    insertAtEnd(&head, 20);
+    insertAtBeginning(&head, 5);
+
+    display(head);
+
+    deleteNode(&head, 10);
+
+    display(head);
+
+    return 0;
+}
